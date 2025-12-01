@@ -1,8 +1,8 @@
 bl_info = {
 	"name": "Unity FBX format",
-	"author": "Angel 'Edy' Garcia (@VehiclePhysics)",
-	"version": (1, 4, 2),
-	"blender": (4, 5, 1),
+	"author": "@VehiclePhysics, updated by stann.co",
+	"version": (1, 4, 5),
+	"blender": (5, 0, 0),
 	"location": "File > Export > Unity FBX",
 	"description": "FBX exporter compatible with Unity's coordinate and scaling system.",
 	"warning": "",
@@ -221,7 +221,7 @@ def export_unity_fbx(context, filepath, active_collection, selected_objects, def
 			ob.select_set(True)
 
 		# Export FBX file
-		params = dict(filepath=filepath, apply_scale_options='FBX_SCALE_UNITS', object_types={'EMPTY', 'MESH', 'ARMATURE'}, use_active_collection=active_collection, use_selection=selected_objects, use_armature_deform_only=deform_bones, add_leaf_bones=leaf_bones, primary_bone_axis=primary_bone_axis, secondary_bone_axis=secondary_bone_axis, use_tspace=tangent_space, use_triangles=triangulate_faces, bake_anim_use_all_actions=all_actions)
+		params = dict(filepath=filepath, apply_scale_options='FBX_SCALE_UNITS', object_types={'EMPTY', 'MESH', 'ARMATURE'}, use_active_collection=active_collection, use_selection=selected_objects, use_armature_deform_only=deform_bones, add_leaf_bones=leaf_bones, primary_bone_axis=primary_bone_axis, secondary_bone_axis=secondary_bone_axis, use_tspace=tangent_space, use_triangles=triangulate_faces, bake_anim_use_all_actions=all_actions, bake_anim_use_all_bones=False, bake_anim_force_startend_keying=False)
 
 		print("Invoking default FBX Exporter:", params)
 		bpy.ops.export_scene.fbx(**params)
