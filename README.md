@@ -1,7 +1,7 @@
 
 # Blender To Unity FBX Exporter
 
-FBX exporter add-on for Blender 3.0+ compatible with Unity's coordinate and scaling system. Exported FBX files are imported into Unity with the correct rotations and scales.
+FBX exporter add-on for Blender 3.2+ compatible with Unity's coordinate and scaling system. Exported FBX files are imported into Unity with the correct rotations and scales.
 
 ## How to install
 
@@ -73,6 +73,7 @@ Requires Blender to be installed in the system, so:
 - Excluded collections (unchecked in the outliner). Won't be exported.
 - Nested collections.
 - Objects with their parent in a disabled/excluded collection.
+- Custom object properties.
 
 ## About the author
 

@@ -1,6 +1,6 @@
 bl_info = {
 	"name": "Unity FBX format",
-	"author": "@VehiclePhysics, updated by stann.co",
+	"author": "Angel 'Edy' Garcia (@VehiclePhysics), updated by stann.co",
 	"version": (1, 4, 5),
 	"blender": (5, 0, 0),
 	"location": "File > Export > Unity FBX",
@@ -149,7 +149,7 @@ def fix_object(ob):
 		fix_object(child)
 
 
-def export_unity_fbx(context, filepath, active_collection, selected_objects, deform_bones, leaf_bones, primary_bone_axis, secondary_bone_axis, tangent_space, triangulate_faces, all_actions, bake_anim_force_startend_keying , use_mesh_modifiers):
+def export_unity_fbx(context, filepath, active_collection, selected_objects, deform_bones, leaf_bones, primary_bone_axis, secondary_bone_axis, tangent_space, triangulate_faces, all_actions, bake_anim_force_startend_keying , use_mesh_modifiers, embed_textures):
 	global shared_data
 	global hidden_collections
 	global hidden_objects
@@ -221,7 +221,10 @@ def export_unity_fbx(context, filepath, active_collection, selected_objects, def
 			ob.select_set(True)
 
 		# Export FBX file
-		params = dict(filepath=filepath, apply_scale_options='FBX_SCALE_UNITS', object_types={'EMPTY', 'MESH', 'ARMATURE'}, use_active_collection=active_collection, use_mesh_modifiers=use_mesh_modifiers, use_selection=selected_objects, use_armature_deform_only=deform_bones, add_leaf_bones=leaf_bones, primary_bone_axis=primary_bone_axis, secondary_bone_axis=secondary_bone_axis, use_tspace=tangent_space, use_triangles=triangulate_faces, bake_anim_use_all_actions=all_actions, bake_anim_use_all_bones=False, bake_anim_force_startend_keying=bake_anim_force_startend_keying)
+		params = dict(filepath=filepath, apply_scale_options='FBX_SCALE_UNITS', object_types={'EMPTY', 'MESH', 'ARMATURE'}, use_custom_props=True, use_active_collection=active_collection, use_mesh_modifiers=use_mesh_modifiers, use_selection=selected_objects, use_armature_deform_only=deform_bones, add_leaf_bones=leaf_bones, primary_bone_axis=primary_bone_axis, secondary_bone_axis=secondary_bone_axis, use_tspace=tangent_space, use_triangles=triangulate_faces, bake_anim_use_all_actions=all_actions, bake_anim_use_all_bones=False, bake_anim_force_startend_keying=bake_anim_force_startend_keying)
+		if embed_textures:
+			params["path_mode"] = 'COPY'
+			params["embed_textures"] = True
 
 		print("Invoking default FBX Exporter:", params)
 		bpy.ops.export_scene.fbx(**params)
@@ -350,6 +353,11 @@ class ExportUnityFbx(Operator, ExportHelper):
 		default=True,
   )
 
+	embed_textures: BoolProperty(
+		name="Embed Textures",
+		description="Embed texture files inside the FBX",
+		default=False,
+	)
 
 	# Custom draw method
 	# https://blender.stackexchange.com/questions/55437/add-gui-elements-to-exporter-window
@@ -368,6 +376,10 @@ class ExportUnityFbx(Operator, ExportHelper):
 		layout.row().prop(self, "tangent_space")
 		layout.row().prop(self, "triangulate_faces")
 		layout.row().prop(self, "use_mesh_modifiers")
+
+		layout.separator()
+		layout.row().label(text = "Files")
+		layout.row().prop(self, "embed_textures")
 
 		layout.separator()
 		layout.row().label(text = "Armatures")
@@ -392,7 +404,7 @@ class ExportUnityFbx(Operator, ExportHelper):
 		split.column().prop(self, "secondary_bone_axis", text="")
 
 	def execute(self, context):
-		return export_unity_fbx(context, self.filepath, self.active_collection, self.selected_objects, self.deform_bones, self.leaf_bones, self.primary_bone_axis, self.secondary_bone_axis, self.tangent_space, self.triangulate_faces, self.all_actions, self.bake_anim_force_startend_keying, self.use_mesh_modifiers)
+		return export_unity_fbx(context, self.filepath, self.active_collection, self.selected_objects, self.deform_bones, self.leaf_bones, self.primary_bone_axis, self.secondary_bone_axis, self.tangent_space, self.triangulate_faces, self.all_actions, self.bake_anim_force_startend_keying, self.use_mesh_modifiers, self.embed_textures)
 
 
 # Only needed if you want to add into a dynamic menu
