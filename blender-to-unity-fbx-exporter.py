@@ -149,7 +149,7 @@ def fix_object(ob):
 		fix_object(child)
 
 
-def export_unity_fbx(context, filepath, active_collection, selected_objects, deform_bones, leaf_bones, primary_bone_axis, secondary_bone_axis, tangent_space, triangulate_faces, all_actions, bake_anim_force_startend_keying , use_mesh_modifiers, embed_textures):
+def export_unity_fbx(context, filepath, active_collection, selected_objects, deform_bones, leaf_bones, primary_bone_axis, secondary_bone_axis, tangent_space, triangulate_faces, all_actions, bake_anim_force_startend_keying , _modifiers, embed_textures):
 	global shared_data
 	global hidden_collections
 	global hidden_objects
@@ -221,7 +221,7 @@ def export_unity_fbx(context, filepath, active_collection, selected_objects, def
 			ob.select_set(True)
 
 		# Export FBX file
-		params = dict(filepath=filepath, apply_scale_options='FBX_SCALE_UNITS', object_types={'EMPTY', 'MESH', 'ARMATURE'}, use_custom_props=True, use_active_collection=active_collection, use_mesh_modifiers=use_mesh_modifiers, use_selection=selected_objects, use_armature_deform_only=deform_bones, add_leaf_bones=leaf_bones, primary_bone_axis=primary_bone_axis, secondary_bone_axis=secondary_bone_axis, use_tspace=tangent_space, use_triangles=triangulate_faces, bake_anim_use_all_actions=all_actions, bake_anim_use_all_bones=False, bake_anim_force_startend_keying=bake_anim_force_startend_keying)
+		params = dict(filepath=filepath, apply_scale_options='FBX_SCALE_UNITS', object_types={'EMPTY', 'MESH', 'ARMATURE'}, use_custom_props=True, use_active_collection=active_collection, _modifiers=_modifiers, use_selection=selected_objects, use_armature_deform_only=deform_bones, add_leaf_bones=leaf_bones, primary_bone_axis=primary_bone_axis, secondary_bone_axis=secondary_bone_axis, use_tspace=tangent_space, use_triangles=triangulate_faces, bake_anim_use_all_actions=all_actions, bake_anim_use_all_bones=False, bake_anim_force_startend_keying=bake_anim_force_startend_keying)
 		if embed_textures:
 			params["path_mode"] = 'COPY'
 			params["embed_textures"] = True
@@ -338,7 +338,7 @@ class ExportUnityFbx(Operator, ExportHelper):
 	use_mesh_modifiers: BoolProperty(
 		name="Use Mesh Modifiers",
 		description="Apply modifiers to the mesh before exporting, WARNING: This prevents exporting shape-keys",
-		default=False,
+		default=True,
 	)
 
 	all_actions: BoolProperty(
